@@ -16,6 +16,7 @@
       PerguntAI
     </a>
     <div class="navbar-links">
+      <a href="#como-funciona">Como funciona</a>
       <a href="#como-ajuda">Como ajuda</a>
       <a href="#demo">Simulador</a>
       <a href="https://github.com/victorbancatelli/PerguntAI" target="_blank" rel="noopener">GitHub</a>
@@ -24,98 +25,186 @@
 </nav>
 
 <header class="hero" id="top">
-  <div class="container">
-    <img src="assets/logo.png" alt="Logo do PerguntAI" class="logo reveal-up">
-    <p class="eyebrow reveal-up" style="--d:.05s">Protótipo em validação</p>
-    <h1 class="reveal-up" style="--d:.1s">PerguntAI</h1>
-    <p class="subtitle reveal-up" style="--d:.18s">Um chatbot de WhatsApp para adolescentes tirarem dúvidas de saúde sexual, saúde mental e vacinação — com respostas restritas a fontes oficiais e checagem dupla de risco.</p>
-    <a href="#demo" class="cta reveal-up" style="--d:.26s">Testar o simulado ↓</a>
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <img src="assets/logo.png" alt="Logo do PerguntAI" class="logo reveal-up">
+      <p class="eyebrow reveal-up" style="--d:.05s">Protótipo em validação</p>
+      <h1 class="reveal-up" style="--d:.1s">Saúde é assunto sério.<br>Conversar sobre ela não precisa ser difícil.</h1>
+      <p class="subtitle reveal-up" style="--d:.18s">PerguntAI é um chatbot de WhatsApp para adolescentes tirarem dúvidas de saúde sexual, saúde mental e vacinação — com respostas restritas a fontes oficiais e uma checagem dupla de risco que sabe a diferença entre curiosidade e um pedido de ajuda.</p>
+      <div class="hero-actions reveal-up" style="--d:.26s">
+        <a href="#demo" class="cta">Testar o simulado</a>
+        <a href="#como-funciona" class="cta cta-ghost">Como funciona</a>
+      </div>
+      <div class="hero-badges reveal-up" style="--d:.32s">
+        <span class="badge">💬 Direto no WhatsApp</span>
+        <span class="badge">📚 Só fontes oficiais</span>
+        <span class="badge">💛 Acolhimento em 1º lugar</span>
+      </div>
+    </div>
+
+    <div class="hero-preview reveal-up" style="--d:.2s" aria-hidden="true">
+      <div class="mini-phone">
+        <div class="mini-phone-header">
+          <img src="assets/logo.png" alt="">
+          <div>
+            <strong>PerguntAI</strong>
+            <span>online</span>
+          </div>
+        </div>
+        <div class="mini-phone-chat">
+          <div class="mini-bubble user">quantas doses da vacina de dengue eu tomo?</div>
+          <div class="mini-bubble bot">Aos 10 anos são 2 doses (DNG4) 💉 Dá uma passadinha na UBS pra confirmar e atualizar sua caderneta!</div>
+          <div class="mini-bubble user">as vezes eu só queria sumir...</div>
+          <div class="mini-bubble bot soft">Posso te perguntar uma coisa, com carinho? 💛 O que te fez pensar nisso agora?</div>
+        </div>
+      </div>
+    </div>
   </div>
+  <svg class="wave" viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0,32 C360,80 1080,0 1440,48 L1440,80 L0,80 Z"></path></svg>
 </header>
 
-<main class="container">
+<main>
 
   <section class="block reveal">
-    <h2>O problema</h2>
-    <p>
-      Adolescentes têm dúvidas reais sobre corpo, sexualidade, saúde mental e vacinação —
-      mas nem sempre têm um lugar seguro para perguntar. Buscadores e redes sociais
-      misturam informação confiável com desinformação, e o medo de julgamento afasta
-      muita gente de perguntar para um adulto ou profissional de saúde.
-    </p>
-    <p>
-      Esse silêncio tem custo: dúvidas que viram desinformação, vacinas atrasadas por
-      falta de orientação clara, e sinais de sofrimento emocional que passam despercebidos
-      até virarem uma crise.
-    </p>
+    <div class="container">
+      <h2>O problema</h2>
+      <p>
+        Adolescentes têm dúvidas reais sobre corpo, sexualidade, saúde mental e vacinação —
+        mas nem sempre têm um lugar seguro para perguntar. Buscadores e redes sociais
+        misturam informação confiável com desinformação, e o medo de julgamento afasta
+        muita gente de perguntar para um adulto ou profissional de saúde.
+      </p>
+      <p>
+        Esse silêncio tem custo: dúvidas que viram desinformação, vacinas atrasadas por
+        falta de orientação clara, e sinais de sofrimento emocional que passam despercebidos
+        até virarem uma crise.
+      </p>
+    </div>
+  </section>
+
+  <section class="block alt reveal" id="como-funciona">
+    <div class="container">
+      <h2>Como funciona, passo a passo</h2>
+      <div class="steps">
+        <div class="step reveal" style="--d:0s">
+          <div class="step-num">1</div>
+          <h3>O aluno manda uma mensagem</h3>
+          <p>No WhatsApp, do jeito que já usa todo dia — sem app novo, sem cadastro.</p>
+        </div>
+        <div class="step reveal" style="--d:.08s">
+          <div class="step-num">2</div>
+          <h3>Checagem dupla de risco</h3>
+          <p>Um filtro de palavras-chave e um classificador de IA avaliam a mensagem antes de qualquer resposta.</p>
+        </div>
+        <div class="step reveal" style="--d:.16s">
+          <div class="step-num">3</div>
+          <h3>Resposta certa pro momento</h3>
+          <p>Dúvida comum → resposta restrita à base oficial. Sinal ambíguo → pergunta de acolhimento. Sinal grave → apoio imediato.</p>
+        </div>
+        <div class="step reveal" style="--d:.24s">
+          <div class="step-num">4</div>
+          <h3>Rede de apoio acionada</h3>
+          <p>Em risco confirmado, o aluno recebe contatos de ajuda na hora e um adulto de confiança é avisado.</p>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section class="block reveal" id="como-ajuda">
-    <h2>Como o PerguntAI ajuda</h2>
-    <div class="cards">
-      <div class="card reveal" style="--d:0s">
-        <div class="icon">💬</div>
-        <h3>Um canal familiar</h3>
-        <p>Funciona direto no WhatsApp — sem precisar baixar outro aplicativo, criar conta ou aprender algo novo.</p>
+    <div class="container">
+      <h2>Como o PerguntAI ajuda</h2>
+      <div class="cards">
+        <div class="card reveal" style="--d:0s">
+          <div class="icon icon-teal">💬</div>
+          <h3>Um canal familiar</h3>
+          <p>Funciona direto no WhatsApp — sem precisar baixar outro aplicativo, criar conta ou aprender algo novo.</p>
+        </div>
+        <div class="card reveal" style="--d:.08s">
+          <div class="icon icon-lime">📚</div>
+          <h3>Só fontes oficiais</h3>
+          <p>As respostas vêm exclusivamente de material oficial (Ministério da Saúde, cadernetas, calendário vacinal). Se a resposta não estiver na base, o bot diz isso — nunca inventa.</p>
+        </div>
+        <div class="card reveal" style="--d:.16s">
+          <div class="icon icon-coral">🛡️</div>
+          <h3>Dupla checagem de risco</h3>
+          <p>Toda mensagem passa por um filtro de palavras-chave <em>e</em> um classificador de IA antes de qualquer resposta.</p>
+        </div>
+        <div class="card reveal" style="--d:.24s">
+          <div class="icon icon-amber">💛</div>
+          <h3>Acolhimento em situações de risco</h3>
+          <p>Sinais graves (risco iminente) geram alerta imediato ao adulto responsável. Sinais ambíguos recebem antes uma pergunta de acolhimento, com carinho — e contatos de apoio (CVV, SAMU, Disque 100) sempre que preciso.</p>
+        </div>
       </div>
-      <div class="card reveal" style="--d:.08s">
-        <div class="icon">📚</div>
-        <h3>Só fontes oficiais</h3>
-        <p>As respostas vêm exclusivamente de material oficial (Ministério da Saúde, cadernetas, calendário vacinal). Se a resposta não estiver na base, o bot diz isso — nunca inventa.</p>
-      </div>
-      <div class="card reveal" style="--d:.16s">
-        <div class="icon">🛡️</div>
-        <h3>Dupla checagem de risco</h3>
-        <p>Toda mensagem passa por um filtro de palavras-chave <em>e</em> um classificador de IA antes de qualquer resposta.</p>
-      </div>
-      <div class="card reveal" style="--d:.24s">
-        <div class="icon">💛</div>
-        <h3>Acolhimento em situações de risco</h3>
-        <p>Sinais graves (risco iminente) geram alerta imediato ao adulto responsável. Sinais ambíguos recebem antes uma pergunta de acolhimento, com carinho — e contatos de apoio (CVV, SAMU, Disque 100) sempre que preciso.</p>
+    </div>
+  </section>
+
+  <section class="block alt reveal">
+    <div class="container">
+      <h2>Pensado para todo mundo envolvido</h2>
+      <div class="audience">
+        <div class="audience-card reveal" style="--d:0s">
+          <div class="audience-emoji">🧑‍🎓</div>
+          <h3>Adolescentes</h3>
+          <p>Um lugar sem julgamento para perguntar o que sentem vergonha de perguntar em voz alta.</p>
+        </div>
+        <div class="audience-card reveal" style="--d:.08s">
+          <div class="audience-emoji">🏫</div>
+          <h3>Escolas</h3>
+          <p>Um canal a mais de cuidado, que avisa a equipe pedagógica quando um aluno precisa de apoio.</p>
+        </div>
+        <div class="audience-card reveal" style="--d:.16s">
+          <div class="audience-emoji">👨‍👩‍👧</div>
+          <h3>Famílias e responsáveis</h3>
+          <p>Tranquilidade de saber que, em sinal de risco, alguém de confiança é avisado na hora.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <section class="block reveal">
-    <h2>Que problemas isso resolve</h2>
-    <ul class="list">
-      <li>Falta de acesso a informação de saúde confiável e sem julgamento para adolescentes.</li>
-      <li>Demora em identificar sinais de risco que adultos à volta podem não perceber a tempo.</li>
-      <li>Desinformação em temas sensíveis como sexualidade e vacinação.</li>
-      <li>A barreira de "ter coragem de perguntar" — o bot está disponível a qualquer hora, sem julgamento.</li>
-    </ul>
-    <p class="note">
-      É um protótipo em fase de validação técnica e jurídica — ainda não está em uso real com
-      adolescentes. O código é aberto e pode ser conferido no
-      <a href="https://github.com/victorbancatelli/PerguntAI" target="_blank" rel="noopener">repositório do GitHub</a>.
-    </p>
+    <div class="container">
+      <h2>Que problemas isso resolve</h2>
+      <ul class="list">
+        <li>Falta de acesso a informação de saúde confiável e sem julgamento para adolescentes.</li>
+        <li>Demora em identificar sinais de risco que adultos à volta podem não perceber a tempo.</li>
+        <li>Desinformação em temas sensíveis como sexualidade e vacinação.</li>
+        <li>A barreira de "ter coragem de perguntar" — o bot está disponível a qualquer hora, sem julgamento.</li>
+      </ul>
+      <p class="note">
+        É um protótipo em fase de validação técnica e jurídica — ainda não está em uso real com
+        adolescentes. O código é aberto e pode ser conferido no
+        <a href="https://github.com/victorbancatelli/PerguntAI" target="_blank" rel="noopener">repositório do GitHub</a>.
+      </p>
+    </div>
   </section>
 
-  <section class="block reveal" id="demo">
-    <h2>Veja como funciona</h2>
-    <p>
-      Esta é uma <strong>demonstração roteirizada</strong>: escolha um tema e um tipo de
-      pergunta para ver como o PerguntAI reagiria. As respostas seguem exatamente o
-      comportamento real testado durante o desenvolvimento — algumas vieram de execuções
-      reais da IA, outras foram escritas no mesmo padrão para cobrir temas cuja base
-      oficial ainda está sendo indexada. Não há chamada de IA em tempo real nesta página.
-    </p>
+  <section class="block alt reveal" id="demo">
+    <div class="container">
+      <h2>Veja como funciona, na prática</h2>
+      <p>
+        Esta é uma <strong>demonstração roteirizada</strong>: escolha um tema e um tipo de
+        pergunta para ver como o PerguntAI reagiria. As respostas seguem exatamente o
+        comportamento real testado durante o desenvolvimento — algumas vieram de execuções
+        reais da IA, outras foram escritas no mesmo padrão para cobrir temas cuja base
+        oficial ainda está sendo indexada. Não há chamada de IA em tempo real nesta página.
+      </p>
 
-    <div class="category-menu" id="category-menu"></div>
+      <div class="category-menu" id="category-menu"></div>
 
-    <div class="phone">
-      <div class="phone-notch"></div>
-      <div class="phone-header">
-        <img src="assets/logo.png" alt="" class="avatar">
-        <div>
-          <div class="contact-name">PerguntAI</div>
-          <div class="contact-status">online</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-header">
+          <img src="assets/logo.png" alt="" class="avatar">
+          <div>
+            <div class="contact-name">PerguntAI</div>
+            <div class="contact-status">online</div>
+          </div>
         </div>
+        <div class="phone-chat" id="chat">
+          <div class="chat-placeholder" id="chat-placeholder">Escolha um tema acima para começar 👆</div>
+        </div>
+        <div class="quick-replies" id="quick-replies"></div>
       </div>
-      <div class="phone-chat" id="chat">
-        <div class="chat-placeholder" id="chat-placeholder">Escolha um tema acima para começar 👆</div>
-      </div>
-      <div class="quick-replies" id="quick-replies"></div>
     </div>
   </section>
 

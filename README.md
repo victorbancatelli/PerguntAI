@@ -74,8 +74,11 @@ Este projeto é um protótipo em validação, testado só com números autorizad
   - **HARD** (suicídio, "me matar", "quero morrer", "tirar a vida", "acabar com tudo", autolesão, overdose, violência/abuso, despedida): alerta IMEDIATO ao adulto responsável, sem delay.
   - **SOFT** (sumir, "não aguento mais", depressão, sem saída, desesperança): o bot primeiro faz uma **pergunta de acolhimento** (`ai_service.build_clarifying_question`) em vez de alertar na hora — evita que uma pergunta puramente informativa ("o que é depressão?") dispare um alerta desnecessário. Só escala para o adulto se a resposta confirmar sofrimento real (lógica em `pending_clarifications` / `process_message`, em `app/main.py`, e equivalente em `app/demo_chat.py` por `session_id`).
   - Mensagem de emergência (`build_emergency_message`) reescrita com tom mais acolhedor — reforça "você não está sozinho(a)" e explica que o aviso ao adulto não é punição.
+  - **Correção de prioridade:** `regex_risk_check` agora verifica TODOS os rótulos HARD antes de qualquer SOFT. Antes, uma mensagem com sinal grave + palavra ambígua na mesma frase (ex.: relato de abuso que também diz "não aguento mais") podia cair no caminho SOFT por causa da ordem de iteração do dicionário — corrigido.
 - **Chat de demonstração em `/demo`** (`app/demo_chat.py`): interface web estilo WhatsApp que conversa direto com `ai_service.py` (mesma lógica de risco + RAG), sem depender da WhatsApp Cloud API. Use para qualquer interessado testar o comportamento da IA pelo navegador. **Sem autenticação — não exponha publicamente na internet.**
-- **Site estático de apresentação em `site/`** (landing page + simulado de WhatsApp roteirizado, sem IA real): publicável via GitHub Pages usando o workflow `.github/workflows/deploy-pages.yml`. Usa a logo em `site/assets/logo.png`.
+- **Site público publicado em [victorbancatelli.github.io/PerguntAI](https://victorbancatelli.github.io/PerguntAI/)** (pasta `site/`, deploy automático via `.github/workflows/deploy-pages.yml` a cada push que toque em `site/`):
+  - Landing page com a logo do projeto (`site/assets/logo.png`), header fixo, fontes Baloo 2/Nunito Sans e animações de entrada/scroll.
+  - Simulador de WhatsApp roteirizado (sem IA em tempo real) com **menu de categorias** (Saúde, Sexualidade, Emocional), cada uma com 3 exemplos: sem risco ✅, moderado 💛 (pergunta de acolhimento) e alerta ⚠️ (escalação imediata). Alguns exemplos "sem risco" (sexualidade, emocional) são ilustrativos — escritos no mesmo padrão validado, porque a base oficial desses temas ainda não está totalmente indexada (ver item de indexação incompleta abaixo).
 
 **Pendente / bloqueado:**
 - **Indexação incompleta:** só 1000 de 2435 chunks estão no ChromaDB. O modelo `gemini-embedding-2` do free tier do Gemini permite só 1000 chamadas de `embed_content` por dia (por projeto) — e não aceita lote (um texto por chamada). `scripts/ingest.py` foi ajustado para chamar a API um texto por vez (`embed_one`). Para completar, rode `python -m scripts.ingest` novamente após a cota diária resetar (repita até cobrir os 2435), ou ative billing na chave do Gemini.
@@ -84,7 +87,6 @@ Este projeto é um protótipo em validação, testado só com números autorizad
 - O classificador de risco (Gemini) andou dando timeout em testes recentes, provavelmente por causa da mesma pressão de cota/rate-limit do dia — isso faz perguntas inofensivas caírem em risco por fail-closed. Vale reobservar quando a cota normalizar.
 
 **Próximos passos sugeridos:**
-1. Completar a indexação dos chunks restantes.
+1. Completar a indexação dos chunks restantes (vai permitir trocar os exemplos ilustrativos do site por respostas reais de sexualidade/emocional também).
 2. Decidir sobre a restrição de país do WhatsApp (verificação de empresa real, ou manter só o `/demo` como forma de teste).
-3. Habilitar o GitHub Pages do repositório (fonte = GitHub Actions) para publicar `site/`.
-4. Quando houver uso real com adolescentes (mesmo em piloto restrito), fazer a validação jurídica/pedagógica descrita acima antes de prosseguir.
+3. Quando houver uso real com adolescentes (mesmo em piloto restrito), fazer a validação jurídica/pedagógica descrita acima antes de prosseguir.
