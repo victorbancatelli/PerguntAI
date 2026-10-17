@@ -99,26 +99,26 @@ h1, h2, h3 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 24px;
+  padding: 18px 24px;
 }
 .navbar-brand {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-family: "Baloo 2", sans-serif;
   font-weight: 700;
-  font-size: 18px;
+  font-size: 30px;
   color: var(--teal-deep);
   text-decoration: none;
   flex-shrink: 0;
 }
-.navbar-logo { width: 30px; height: 30px; border-radius: 9px; }
-.navbar-links { display: flex; gap: 22px; }
+.navbar-logo { width: 56px; height: 56px; border-radius: 15px; }
+.navbar-links { display: flex; align-items: center; gap: 26px; }
 .navbar-links a {
   color: var(--muted);
   text-decoration: none;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 15.5px;
   white-space: nowrap;
   transition: color .2s ease;
 }
@@ -126,7 +126,7 @@ h1, h2, h3 {
 .navbar-links a.navbar-cta {
   background: linear-gradient(135deg, var(--teal), var(--lime));
   color: white;
-  padding: 8px 16px;
+  padding: 10px 20px;
   border-radius: 999px;
   transition: transform .2s ease, box-shadow .2s ease;
 }
@@ -169,14 +169,6 @@ h1, h2, h3 {
 
 .hero-copy { text-align: left; }
 
-.logo {
-  width: 84px;
-  height: 84px;
-  margin: 0 0 18px;
-  display: block;
-  border-radius: 24px;
-  box-shadow: 0 14px 30px rgba(43, 122, 114, .2);
-}
 
 .eyebrow {
   text-transform: uppercase;
@@ -193,7 +185,7 @@ h1, h2, h3 {
   background: white;
   border: 1px solid var(--border);
   border-radius: 999px;
-  padding: 6px 14px 6px 10px;
+  padding: 6px 16px 6px 12px;
   letter-spacing: .5px;
 }
 .badge-status .icon-inline { width: 16px; height: 16px; color: var(--amber); }
@@ -602,7 +594,7 @@ h1, h2, h3 {
 /* Phone mockup */
 .phone {
   position: relative;
-  max-width: 320px;
+  max-width: 390px;
   width: 100%;
   margin: 28px auto 0;
   background: linear-gradient(165deg, #3a4039, #202420);
@@ -844,7 +836,6 @@ footer { padding: 44px 0 28px; color: var(--ink); font-size: 14px; background: v
 @media (max-width: 860px) {
   .hero-grid { grid-template-columns: 1fr; text-align: center; padding-bottom: 40px; }
   .hero-copy { text-align: center; }
-  .logo { margin: 0 auto 18px; }
   .subtitle { margin: 0 auto 26px; }
   .hero-actions, .hero-badges { justify-content: center; }
   .hero-preview { order: -1; max-width: 280px; margin: 0 auto; }
