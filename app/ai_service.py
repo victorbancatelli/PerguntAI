@@ -155,12 +155,22 @@ def build_clarifying_question() -> str:
 
 
 def regex_risk_check(text: str) -> str | None:
-    """Filtro 1. Retorna o rótulo do primeiro padrão encontrado, ou None."""
+    """
+    Filtro 1. Retorna o rótulo do padrão encontrado, ou None.
+    HARD tem prioridade sobre SOFT: se a mensagem contiver sinais dos dois tipos
+    (ex.: um relato de abuso que também diz "não aguento mais"), o HARD vence e
+    o fluxo escala na hora — nunca esperamos uma pergunta de acolhimento quando
+    já há um sinal inequívoco de risco grave na mesma mensagem.
+    """
     norm = normalize(text)
+    soft_match = None
     for label, pattern in RISK_PATTERNS.items():
-        if pattern.search(norm):
+        if not pattern.search(norm):
+            continue
+        if label in HARD_LABELS:
             return label
-    return None
+        soft_match = soft_match or label
+    return soft_match
 
 
 class RiskVerdict(str, Enum):
