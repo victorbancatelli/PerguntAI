@@ -79,6 +79,12 @@ Este projeto é um protótipo em validação, testado só com números autorizad
 - **Site público publicado em [victorbancatelli.github.io/PerguntAI](https://victorbancatelli.github.io/PerguntAI/)** (pasta `site/`, deploy automático via `.github/workflows/deploy-pages.yml` a cada push que toque em `site/`):
   - Landing page com a logo do projeto (`site/assets/logo.png`), header fixo, fontes Baloo 2/Nunito Sans e animações de entrada/scroll.
   - Simulador de WhatsApp roteirizado (sem IA em tempo real) com **menu de categorias** (Saúde, Sexualidade, Emocional), cada uma com 3 exemplos: sem risco ✅, moderado 💛 (pergunta de acolhimento) e alerta ⚠️ (escalação imediata). Alguns exemplos "sem risco" (sexualidade, emocional) são ilustrativos — escritos no mesmo padrão validado, porque a base oficial desses temas ainda não está totalmente indexada (ver item de indexação incompleta abaixo).
+  - Chips de "cenário rápido" acima do menu de categorias, pra ir direto a um exemplo de cada nível de risco sem precisar escolher categoria primeiro.
+  - Faixa "Baseado em fontes oficiais" listando as bases reais usadas (Ministério da Saúde, Cadernos de Atenção Básica, Calendário Nacional de Vacinação).
+  - FAQ em acordeão (`<details>`, acessível por teclado nativamente) respondendo se o bot substitui atendimento profissional, como funciona a quebra de sigilo em risco, e como escolas poderiam implementar — esta última é honesta sobre o projeto ainda ser um protótipo, sem link/contato fictício.
+  - Nav com CTAs institucionais: "Para Escolas" (rola até a resposta do FAQ) e "Simular Chat" (rola até o simulador).
+  - Ícones SVG inline no lugar de emojis decorativos (cards, badges, menu); os emojis dentro das mensagens reais do bot (💛, 📞 etc.) foram mantidos, pois são conteúdo de produto, não decoração.
+  - Acessibilidade: skip-link, `:focus-visible`, contraste de texto secundário reforçado, alvos de toque ≥48px no simulador.
 
 **Pendente / bloqueado:**
 - **Indexação incompleta:** só 1000 de 2435 chunks estão no ChromaDB. O modelo `gemini-embedding-2` do free tier do Gemini permite só 1000 chamadas de `embed_content` por dia (por projeto) — e não aceita lote (um texto por chamada). `scripts/ingest.py` foi ajustado para chamar a API um texto por vez (`embed_one`). Para completar, rode `python -m scripts.ingest` novamente após a cota diária resetar (repita até cobrir os 2435), ou ative billing na chave do Gemini.

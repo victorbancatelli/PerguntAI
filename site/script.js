@@ -110,9 +110,22 @@ const CATEGORIES = [
   },
 ];
 
+// Atraso de "digitando..." antes de qualquer resposta aparecer (1 a 1.5s).
+const TYPING_DELAY_MS = 1300;
+
+// Atalhos de cenário, exibidos como chips acima do menu de categorias —
+// cada um aponta para um item já existente em CATEGORIES, só com um rótulo
+// mais explícito sobre o nível de risco.
+const QUICK_SCENARIOS = [
+  { categoryKey: "saude", tier: "none", label: "Dúvida sobre vacina (Normal)" },
+  { categoryKey: "emocional", tier: "moderate", label: "Sentimento de tristeza (Ambíguo)" },
+  { categoryKey: "emocional", tier: "alert", label: "Pedido de ajuda (Risco Alto)" },
+];
+
 const chat = document.getElementById("chat");
 const quickRepliesEl = document.getElementById("quick-replies");
 const categoryMenuEl = document.getElementById("category-menu");
+const quickScenariosEl = document.getElementById("quick-scenarios");
 const placeholder = document.getElementById("chat-placeholder");
 
 let activeCategory = null;
@@ -173,7 +186,7 @@ async function playScript(item) {
   addBubble(item.user, "user");
   await new Promise((r) => setTimeout(r, 450));
   const typing = addTypingIndicator();
-  await new Promise((r) => setTimeout(r, 1100));
+  await new Promise((r) => setTimeout(r, TYPING_DELAY_MS));
   typing.remove();
   const cls = item.tier === "alert" ? "bot alert" : item.tier === "moderate" ? "bot moderate" : "bot";
   addBubble(item.reply, cls);
@@ -241,8 +254,37 @@ function selectCategory(cat) {
   renderQuickReplies(cat);
 }
 
+function renderQuickScenarios() {
+  if (!quickScenariosEl) return;
+  quickScenariosEl.innerHTML = "";
+  QUICK_SCENARIOS.forEach((scenario) => {
+    const category = CATEGORIES.find((c) => c.key === scenario.categoryKey);
+    const item = category.items.find((i) => i.tier === scenario.tier);
+    const btn = document.createElement("button");
+    btn.className = "scenario-chip tier-" + scenario.tier;
+    btn.innerHTML = `${ICONS[scenario.tier]} <span>${scenario.label}</span>`;
+    btn.setAttribute("aria-label", `${scenario.label}: ${item.user}`);
+    btn.addEventListener("click", () => {
+      selectCategory(category);
+      playScript(item);
+    });
+    quickScenariosEl.appendChild(btn);
+  });
+}
+
 renderCategoryMenu();
+renderQuickScenarios();
 selectCategory(CATEGORIES[0]);
+
+// Se a URL apontar direto para uma pergunta do FAQ (ex.: vindo do link
+// "Para Escolas" no menu), abre o <details> correspondente.
+function openFaqFromHash() {
+  if (!location.hash) return;
+  const target = document.querySelector(location.hash);
+  if (target && target.tagName === "DETAILS") target.open = true;
+}
+openFaqFromHash();
+window.addEventListener("hashchange", openFaqFromHash);
 
 // Reveal-on-scroll
 const io = new IntersectionObserver(
