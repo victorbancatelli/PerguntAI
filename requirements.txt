@@ -1,0 +1,24 @@
+# --- Servidor web ---
+fastapi>=0.115
+uvicorn[standard]>=0.30
+httpx>=0.27              # cliente HTTP assíncrono para a WhatsApp Cloud API
+
+# --- Configuração ---
+pydantic-settings>=2.4   # leitura tipada do .env
+python-dotenv>=1.0
+
+# --- IA (SDK oficial e atual do Google: "google-genai").
+# ATENÇÃO: o pacote antigo "google-generativeai" está descontinuado. Não use.
+google-genai>=1.0
+
+# --- Banco vetorial local ---
+chromadb>=1.0
+
+# --- Ingestão de PDFs ---
+pdfplumber>=0.11
+
+# --- Testes ---
+pytest>=8
+
+# Dica: depois do primeiro `pip install -r requirements.txt`, rode
+# `pip freeze > requirements.lock` e use o lock em produção para fixar versões.
