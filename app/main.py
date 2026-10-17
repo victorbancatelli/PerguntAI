@@ -70,6 +70,34 @@ seen_messages = _SeenMessages()
 
 
 # ---------------------------------------------------------------------------
+# Pergunta de acolhimento pendente: quando uma palavra-chave AMBÍGUA (SOFT,
+# ver ai_service.SOFT_LABELS) é detectada, perguntamos com carinho antes de
+# decidir se escalamos para o adulto. Guardamos a mensagem original aqui até
+# a próxima resposta do aluno (ou até expirar). Em produção com vários
+# workers, troque por Redis — mesma observação da deduplicação acima.
+# ---------------------------------------------------------------------------
+class _PendingClarifications:
+    def __init__(self, ttl_seconds: int = 1200):
+        self._ttl = ttl_seconds
+        self._items: dict[str, tuple[str, float]] = {}
+
+    def pop_if_valid(self, sender: str) -> str | None:
+        item = self._items.pop(sender, None)
+        if item is None:
+            return None
+        original_text, ts = item
+        if time.monotonic() - ts > self._ttl:
+            return None
+        return original_text
+
+    def set(self, sender: str, original_text: str) -> None:
+        self._items[sender] = (original_text, time.monotonic())
+
+
+pending_clarifications = _PendingClarifications()
+
+
+# ---------------------------------------------------------------------------
 # Ciclo de vida
 # ---------------------------------------------------------------------------
 @asynccontextmanager
@@ -189,10 +217,40 @@ async def process_message(message: dict) -> None:
         text = text[:MAX_INPUT_CHARS]
 
         # ---- ETAPA 1: dupla checagem de risco (prioridade máxima) ----
+
+        # Esta mensagem é a resposta a uma pergunta de acolhimento anterior
+        # (palavra-chave ambígua, ex.: "depressão")? Decide com base nela.
+        pending_text = pending_clarifications.pop_if_valid(sender)
+        if pending_text is not None:
+            followup = await ai_service.assess_risk(text)
+            if followup.is_risk or followup.needs_clarification:
+                # Ainda preocupante (ou ainda ambíguo) -> não arriscamos mais
+                # uma rodada de pergunta; escalamos com o contexto completo.
+                combined_reason = (
+                    f"mensagem original: '{pending_text}' | após pergunta de "
+                    f"acolhimento: {followup.reason_text}"
+                )
+                await handle_risk(
+                    sender, f"{pending_text}\n(em seguida) {text}",
+                    ai_service.RiskAssessment(is_risk=True, reasons=[combined_reason]),
+                )
+            else:
+                # Tranquilizou -> respondemos à pergunta original normalmente.
+                answer = await ai_service.answer_question(pending_text)
+                await wa.send_text(sender, answer)
+            return
+
         assessment = await ai_service.assess_risk(text)
         if assessment.is_risk:
             await handle_risk(sender, text, assessment)
             return  # FIM DO FLUXO — não respondemos a dúvida.
+
+        if assessment.needs_clarification:
+            # Palavra-chave ambígua: perguntamos com carinho antes de decidir
+            # se um adulto precisa ser avisado.
+            pending_clarifications.set(sender, text)
+            await wa.send_text(sender, ai_service.build_clarifying_question())
+            return
 
         # ---- ETAPAS 2–4: RAG + resposta restrita ----
         answer = await ai_service.answer_question(text)

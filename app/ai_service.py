@@ -47,15 +47,17 @@ TECHNICAL_ERROR_ANSWER = (
 def build_emergency_message(counselor_name: str, counselor_contact: str) -> str:
     """Mensagem enviada ao aluno quando há risco. Texto fixo e revisado por humanos."""
     return (
-        "Oi. Pelo que você escreveu, parece que você pode estar passando por um "
-        "momento muito difícil. Você não precisa passar por isso sozinho(a). 💛\n\n"
-        "Fale com alguém agora:\n"
-        "📞 *CVV — ligue 188* (gratuito, 24h, sigiloso) ou converse em cvv.org.br\n"
-        "🚑 *Em perigo imediato:* SAMU 192\n"
+        "Oi. 💛 Antes de mais nada: obrigado por confiar em mim com isso. "
+        "O que você está sentindo é real, importa, e você não precisa carregar "
+        "isso sozinho(a) nem mais um minuto.\n\n"
+        "Tem gente pronta para te ouvir agora, sem te julgar:\n"
+        "📞 *CVV — ligue 188* (gratuito, 24h, sigiloso) ou fale em cvv.org.br\n"
+        "🚑 *Emergência agora:* SAMU 192\n"
         "🛡️ *Violência ou abuso:* Disque 100\n"
         f"🧑‍🏫 *{counselor_name}:* {counselor_contact}\n\n"
-        "Um adulto de confiança da equipe da escola também será avisado para "
-        "poder te apoiar."
+        "Também vou pedir para um adulto de confiança da escola te procurar — "
+        "não porque você fez algo errado, mas porque você merece ter alguém "
+        "do seu lado nisso. Você não está sozinho(a)."
     )
 
 
@@ -128,6 +130,28 @@ RISK_PATTERNS: dict[str, re.Pattern[str]] = {
         "violência/abuso": r"\babus(o|ou|aram|ando|ada|ado)\b|\bestupr\w*|\bme (bate|batem|bateu|bateram|forcou|forcaram)\b",
     }.items()
 }
+
+
+# HARD: sinais claros de crise/risco iminente — alerta ao adulto IMEDIATO, sem
+# pergunta de acolhimento antes (delay aqui pode ser perigoso).
+# SOFT: palavras ambíguas que também aparecem em perguntas puramente informativas
+# (ex.: "o que é depressão?") — primeiro fazemos uma pergunta de acolhimento;
+# só escalamos para o adulto se a resposta confirmar sofrimento real.
+HARD_LABELS = {
+    "suicídio", "me matar", "quero morrer", "tirar a vida", "acabar com tudo",
+    "autolesão", "overdose", "violência/abuso", "despedida",
+}
+SOFT_LABELS = {"sumir", "não aguento mais", "depressão", "sem saída", "desesperança"}
+
+CLARIFYING_QUESTION = (
+    "Posso te perguntar uma coisa, com carinho? 💛 O que te fez pensar nisso agora? "
+    "Pode me contar com calma, do seu jeito — eu tô aqui pra te ouvir."
+)
+
+
+def build_clarifying_question() -> str:
+    """Pergunta de acolhimento para palavras-chave ambíguas (tier SOFT). Texto fixo."""
+    return CLARIFYING_QUESTION
 
 
 def regex_risk_check(text: str) -> str | None:
@@ -217,6 +241,7 @@ async def llm_risk_check(text: str) -> tuple[RiskVerdict, str | None]:
 @dataclass
 class RiskAssessment:
     is_risk: bool
+    needs_clarification: bool = False
     regex_label: str | None = None
     llm_verdict: RiskVerdict | None = None
     technical_error: str | None = None
@@ -230,13 +255,22 @@ class RiskAssessment:
 async def assess_risk(text: str) -> RiskAssessment:
     """
     Orquestra a dupla checagem.
-      - Regex disparou -> risco imediato (não precisamos gastar a chamada ao LLM).
+      - Regex HARD disparou -> risco imediato (não precisamos gastar a chamada ao LLM).
+      - Regex SOFT disparou -> needs_clarification (pergunta de acolhimento antes de
+        decidir escalar; ver process_message em app/main.py para o fluxo completo).
       - Senão, LLM: SIM ou TALVEZ -> risco. Só NÃO libera.
       - Qualquer exceção inesperada -> risco (fail-closed).
     """
     try:
         label = regex_risk_check(text)
         if label:
+            if label in SOFT_LABELS:
+                return RiskAssessment(
+                    is_risk=False,
+                    needs_clarification=True,
+                    regex_label=label,
+                    reasons=[f"palavra-chave ambígua (pergunta de acolhimento): {label}"],
+                )
             return RiskAssessment(is_risk=True, regex_label=label, reasons=[f"palavra-chave: {label}"])
 
         verdict, error = await llm_risk_check(text)

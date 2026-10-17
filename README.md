@@ -69,16 +69,22 @@ Este projeto é um protótipo em validação, testado só com números autorizad
 
 **Funcionando:**
 - Setup local completo (venv, dependências, testes). `pytest -q` passa (26/26 testes do filtro de risco).
-- Checagem de risco (regex + classificador Gemini) validada manualmente e funcionando corretamente.
 - RAG funcionando para o conteúdo já indexado (ex.: pergunta sobre dose da vacina de dengue respondida corretamente a partir do `.md` transcrito).
+- **Checagem de risco em dois níveis** (`app/ai_service.py` — `HARD_LABELS` / `SOFT_LABELS`):
+  - **HARD** (suicídio, "me matar", "quero morrer", "tirar a vida", "acabar com tudo", autolesão, overdose, violência/abuso, despedida): alerta IMEDIATO ao adulto responsável, sem delay.
+  - **SOFT** (sumir, "não aguento mais", depressão, sem saída, desesperança): o bot primeiro faz uma **pergunta de acolhimento** (`ai_service.build_clarifying_question`) em vez de alertar na hora — evita que uma pergunta puramente informativa ("o que é depressão?") dispare um alerta desnecessário. Só escala para o adulto se a resposta confirmar sofrimento real (lógica em `pending_clarifications` / `process_message`, em `app/main.py`, e equivalente em `app/demo_chat.py` por `session_id`).
+  - Mensagem de emergência (`build_emergency_message`) reescrita com tom mais acolhedor — reforça "você não está sozinho(a)" e explica que o aviso ao adulto não é punição.
 - **Chat de demonstração em `/demo`** (`app/demo_chat.py`): interface web estilo WhatsApp que conversa direto com `ai_service.py` (mesma lógica de risco + RAG), sem depender da WhatsApp Cloud API. Use para qualquer interessado testar o comportamento da IA pelo navegador. **Sem autenticação — não exponha publicamente na internet.**
+- **Site estático de apresentação em `site/`** (landing page + simulado de WhatsApp roteirizado, sem IA real): publicável via GitHub Pages usando o workflow `.github/workflows/deploy-pages.yml`. Usa a logo em `site/assets/logo.png`.
 
 **Pendente / bloqueado:**
 - **Indexação incompleta:** só 1000 de 2435 chunks estão no ChromaDB. O modelo `gemini-embedding-2` do free tier do Gemini permite só 1000 chamadas de `embed_content` por dia (por projeto) — e não aceita lote (um texto por chamada). `scripts/ingest.py` foi ajustado para chamar a API um texto por vez (`embed_one`). Para completar, rode `python -m scripts.ingest` novamente após a cota diária resetar (repita até cobrir os 2435), ou ative billing na chave do Gemini.
 - **WhatsApp Cloud API real bloqueada:** a conta de teste da Meta retorna erro `130497` ("Business account is restricted from messaging users in this country") ao tentar mandar mensagem para números no Brasil. Isso é uma restrição da Meta para contas sem verificação de empresa — como não há CNPJ para verificar, o envio real pelo WhatsApp está pausado. Use `/demo` enquanto isso.
 - `data/docs/Calendário Nacional de Vacinação - Adolescentes e jovens.pdf` é escaneado (sem texto extraível); por isso foi criado `calendario_vacinal_2026_transcrito.md` com a tabela transcrita manualmente — mantenha esse `.md` atualizado se o calendário oficial mudar, em vez de depender do PDF escaneado.
+- O classificador de risco (Gemini) andou dando timeout em testes recentes, provavelmente por causa da mesma pressão de cota/rate-limit do dia — isso faz perguntas inofensivas caírem em risco por fail-closed. Vale reobservar quando a cota normalizar.
 
 **Próximos passos sugeridos:**
 1. Completar a indexação dos chunks restantes.
 2. Decidir sobre a restrição de país do WhatsApp (verificação de empresa real, ou manter só o `/demo` como forma de teste).
-3. Quando houver uso real com adolescentes (mesmo em piloto restrito), fazer a validação jurídica/pedagógica descrita acima antes de prosseguir.
+3. Habilitar o GitHub Pages do repositório (fonte = GitHub Actions) para publicar `site/`.
+4. Quando houver uso real com adolescentes (mesmo em piloto restrito), fazer a validação jurídica/pedagógica descrita acima antes de prosseguir.

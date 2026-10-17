@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PerguntAI — Saúde para adolescentes, numa conversa de WhatsApp</title>
+<link rel="icon" href="assets/logo.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <img src="assets/logo.png" alt="Logo do PerguntAI" class="logo">
+    <p class="eyebrow">Protótipo em validação</p>
+    <h1>PerguntAI</h1>
+    <p class="subtitle">Um chatbot de WhatsApp para adolescentes tirarem dúvidas de saúde sexual, saúde mental e vacinação — com respostas restritas a fontes oficiais e checagem dupla de risco.</p>
+    <a href="#demo" class="cta">Testar o simulado ↓</a>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="block">
+    <h2>O problema</h2>
+    <p>
+      Adolescentes têm dúvidas reais sobre corpo, sexualidade, saúde mental e vacinação —
+      mas nem sempre têm um lugar seguro para perguntar. Buscadores e redes sociais
+      misturam informação confiável com desinformação, e o medo de julgamento afasta
+      muita gente de perguntar para um adulto ou profissional de saúde.
+    </p>
+    <p>
+      Esse silêncio tem custo: dúvidas que viram desinformação, vacinas atrasadas por
+      falta de orientação clara, e sinais de sofrimento emocional que passam despercebidos
+      até virarem uma crise.
+    </p>
+  </section>
+
+  <section class="block">
+    <h2>Como o PerguntAI ajuda</h2>
+    <div class="cards">
+      <div class="card">
+        <div class="icon">💬</div>
+        <h3>Um canal familiar</h3>
+        <p>Funciona direto no WhatsApp — sem precisar baixar outro aplicativo, criar conta ou aprender algo novo.</p>
+      </div>
+      <div class="card">
+        <div class="icon">📚</div>
+        <h3>Só fontes oficiais</h3>
+        <p>As respostas vêm exclusivamente de material oficial (Ministério da Saúde, cadernetas, calendário vacinal). Se a resposta não estiver na base, o bot diz isso — nunca inventa.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🛡️</div>
+        <h3>Dupla checagem de risco</h3>
+        <p>Toda mensagem passa por um filtro de palavras-chave <em>e</em> um classificador de IA antes de qualquer resposta.</p>
+      </div>
+      <div class="card">
+        <div class="icon">💛</div>
+        <h3>Acolhimento em situações de risco</h3>
+        <p>Se houver sinal de risco (ideação suicida, automutilação, abuso), o aluno recebe uma resposta acolhedora com contatos de apoio (CVV, SAMU, Disque 100) e um adulto de confiança da escola é avisado — com cuidado, não como punição.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>Que problemas isso resolve</h2>
+    <ul class="list">
+      <li>Falta de acesso a informação de saúde confiável e sem julgamento para adolescentes.</li>
+      <li>Demora em identificar sinais de risco que adultos à volta podem não perceber a tempo.</li>
+      <li>Desinformação em temas sensíveis como sexualidade e vacinação.</li>
+      <li>A barreira de "ter coragem de perguntar" — o bot está disponível a qualquer hora, sem julgamento.</li>
+    </ul>
+    <p class="note">
+      É um protótipo em fase de validação técnica e jurídica — ainda não está em uso real com
+      adolescentes. O código é aberto e pode ser conferido no
+      <a href="https://github.com/victorbancatelli/PerguntAI" target="_blank" rel="noopener">repositório do GitHub</a>.
+    </p>
+  </section>
+
+  <section class="block" id="demo">
+    <h2>Veja como funciona</h2>
+    <p>
+      Esta é uma <strong>demonstração roteirizada</strong> (as respostas abaixo são reais,
+      geradas pela IA durante os testes do projeto, mas estão pré-gravadas aqui — não há
+      chamada de IA em tempo real nesta página pública). Clique numa das perguntas de exemplo
+      para ver a conversa.
+    </p>
+
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="phone-header">
+        <div class="avatar">P</div>
+        <div>
+          <div class="contact-name">PerguntAI</div>
+          <div class="contact-status">online</div>
+        </div>
+      </div>
+      <div class="phone-chat" id="chat"></div>
+      <div class="quick-replies" id="quick-replies"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <p>PerguntAI é um projeto em desenvolvimento. Código aberto no
+      <a href="https://github.com/victorbancatelli/PerguntAI" target="_blank" rel="noopener">GitHub</a>.
+    </p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
