@@ -9,10 +9,27 @@ const CLARIFYING =
 const EMERGENCY =
   "Oi. 💛 Antes de mais nada: obrigado por confiar em mim com isso. O que você está sentindo é real, importa, e você não precisa carregar isso sozinho(a) nem mais um minuto.\n\nTem gente pronta para te ouvir agora, sem te julgar:\n📞 CVV — ligue 188 (gratuito, 24h, sigiloso) ou fale em cvv.org.br\n🚑 Emergência agora: SAMU 192\n🛡️ Violência ou abuso: Disque 100\n🧑‍🏫 Orientador(a) da escola: procure a coordenação pedagógica\n\nTambém vou pedir para um adulto de confiança da escola te procurar — não porque você fez algo errado, mas porque você merece ter alguém do seu lado nisso. Você não está sozinho(a).";
 
+// Ícones inline (sem depender de CDN externo) — mesmo estilo visual das
+// bibliotecas tipo Lucide/Heroicons: traço fino, cantos arredondados.
+const ICONS = {
+  saude:
+    '<svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>',
+  sexualidade:
+    '<svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>',
+  emocional:
+    '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01M15 9h.01"/></svg>',
+  none:
+    '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 5-5"/></svg>',
+  moderate:
+    '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>',
+  alert:
+    '<svg viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
+};
+
 const CATEGORIES = [
   {
     key: "saude",
-    label: "🩺 Saúde",
+    label: "Saúde",
     items: [
       {
         tier: "none",
@@ -39,7 +56,7 @@ const CATEGORIES = [
   },
   {
     key: "sexualidade",
-    label: "💗 Sexualidade",
+    label: "Sexualidade",
     items: [
       {
         tier: "none",
@@ -66,7 +83,7 @@ const CATEGORIES = [
   },
   {
     key: "emocional",
-    label: "💛 Emocional",
+    label: "Emocional",
     items: [
       {
         tier: "none",
@@ -138,12 +155,25 @@ function setButtonsDisabled(disabled) {
   quickRepliesEl.querySelectorAll("button").forEach((b) => (b.disabled = disabled));
 }
 
+function addTypingIndicator() {
+  if (placeholder) placeholder.remove();
+  const row = document.createElement("div");
+  row.className = "bubble-row bot";
+  const div = document.createElement("div");
+  div.className = "bubble bot typing";
+  div.innerHTML = '<span class="typing-dots"><span></span><span></span><span></span></span>';
+  row.appendChild(div);
+  chat.appendChild(row);
+  chat.scrollTop = chat.scrollHeight;
+  return row;
+}
+
 async function playScript(item) {
   setButtonsDisabled(true);
   addBubble(item.user, "user");
   await new Promise((r) => setTimeout(r, 450));
-  const typing = addBubble("digitando...", "bot typing", false);
-  await new Promise((r) => setTimeout(r, 1000));
+  const typing = addTypingIndicator();
+  await new Promise((r) => setTimeout(r, 1100));
   typing.remove();
   const cls = item.tier === "alert" ? "bot alert" : item.tier === "moderate" ? "bot moderate" : "bot";
   addBubble(item.reply, cls);
@@ -163,9 +193,9 @@ function renderQuickReplies(category) {
     const btn = document.createElement("button");
     const tierClass = item.tier === "none" ? "" : " tier-" + item.tier;
     btn.className = "quick-reply" + tierClass;
-    const tierTag = item.tier === "none" ? "✅" : item.tier === "moderate" ? "💛" : "⚠️";
-    btn.innerHTML = `<span class="tag">${tierTag}</span><span>${item.label}</span>`;
+    btn.innerHTML = `<span class="tag">${ICONS[item.tier]}</span><span>${item.label}</span>`;
     btn.title = item.user;
+    btn.setAttribute("aria-label", `${item.label}: ${item.user}`);
     btn.addEventListener("click", () => playScript(item));
     quickRepliesEl.appendChild(btn);
   });
@@ -188,7 +218,11 @@ function renderCategoryMenu() {
   CATEGORIES.forEach((cat) => {
     const btn = document.createElement("button");
     btn.className = "category-btn";
-    btn.textContent = cat.label;
+    btn.dataset.key = cat.key;
+    btn.innerHTML = `<span class="tag">${ICONS[cat.key]}</span> ${cat.label}`;
+    btn.style.display = "inline-flex";
+    btn.style.alignItems = "center";
+    btn.style.gap = "7px";
     btn.addEventListener("click", () => selectCategory(cat));
     categoryMenuEl.appendChild(btn);
   });
@@ -197,7 +231,7 @@ function renderCategoryMenu() {
 function selectCategory(cat) {
   activeCategory = cat;
   categoryMenuEl.querySelectorAll(".category-btn").forEach((b) => {
-    b.classList.toggle("active", b.textContent === cat.label);
+    b.classList.toggle("active", b.dataset.key === cat.key);
   });
   chat.innerHTML = "";
   const ph = document.createElement("div");
