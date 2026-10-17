@@ -100,14 +100,28 @@ const placeholder = document.getElementById("chat-placeholder");
 
 let activeCategory = null;
 
-function addBubble(text, cls) {
+function nowLabel() {
+  const d = new Date();
+  return d.getHours().toString().padStart(2, "0") + ":" + d.getMinutes().toString().padStart(2, "0");
+}
+
+function addBubble(text, cls, withTime = true) {
   if (placeholder) placeholder.remove();
+  const row = document.createElement("div");
+  row.className = "bubble-row " + (cls.includes("user") ? "user" : "bot");
   const div = document.createElement("div");
   div.className = "bubble " + cls;
   div.textContent = text;
-  chat.appendChild(div);
+  if (withTime) {
+    const time = document.createElement("span");
+    time.className = "bubble-time";
+    time.textContent = nowLabel();
+    div.appendChild(time);
+  }
+  row.appendChild(div);
+  chat.appendChild(row);
   chat.scrollTop = chat.scrollHeight;
-  return div;
+  return row;
 }
 
 function addMeta(text) {
@@ -128,7 +142,7 @@ async function playScript(item) {
   setButtonsDisabled(true);
   addBubble(item.user, "user");
   await new Promise((r) => setTimeout(r, 450));
-  const typing = addBubble("digitando...", "bot typing");
+  const typing = addBubble("digitando...", "bot typing", false);
   await new Promise((r) => setTimeout(r, 1000));
   typing.remove();
   const cls = item.tier === "alert" ? "bot alert" : item.tier === "moderate" ? "bot moderate" : "bot";
@@ -139,12 +153,18 @@ async function playScript(item) {
 
 function renderQuickReplies(category) {
   quickRepliesEl.innerHTML = "";
+
+  const label = document.createElement("div");
+  label.className = "quick-replies-label";
+  label.textContent = "Escolha uma pergunta";
+  quickRepliesEl.appendChild(label);
+
   category.items.forEach((item) => {
     const btn = document.createElement("button");
     const tierClass = item.tier === "none" ? "" : " tier-" + item.tier;
     btn.className = "quick-reply" + tierClass;
     const tierTag = item.tier === "none" ? "✅" : item.tier === "moderate" ? "💛" : "⚠️";
-    btn.textContent = `${tierTag} ${item.label}`;
+    btn.innerHTML = `<span class="tag">${tierTag}</span><span>${item.label}</span>`;
     btn.title = item.user;
     btn.addEventListener("click", () => playScript(item));
     quickRepliesEl.appendChild(btn);
